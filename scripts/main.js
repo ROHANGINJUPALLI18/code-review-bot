@@ -11,7 +11,7 @@ async function main() {
 
     const eventPath = process.env.GITHUB_EVENT_PATH;
     if (!eventPath) {
-        console.error("GITHUB_EVENT_PATH is missing!");
+        console.error("GITHUB_EVENT_PATH is missing please verify it !");
         process.exit(1);
     }
 
