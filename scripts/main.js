@@ -5,7 +5,7 @@ import fs from "fs";
 async function main() {
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
-        console.error("GITHUB_TOKEN is missing!");
+        console.error("GITHUB_TOKEN is missing or token is expired!");
         process.exit(1);
     }
 
