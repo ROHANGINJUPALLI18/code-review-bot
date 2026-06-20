@@ -1,6 +1,8 @@
 import {Octokit} from "@octokit/rest";
+import { log } from "console";
 import fs from "fs";
 import { lintFiles } from "./lint.js";
+import { postComments } from "./postComments.js";
 
 async function main() {
     const token = process.env.GITHUB_TOKEN;
@@ -51,6 +53,18 @@ async function main() {
         console.log(`\n\n\nchanged file names are : ${filePaths.join("\n")}`);
         const lintFindings = await lintFiles(filePaths);
         console.log("\n\nESLint findings:", JSON.stringify(lintFindings, null, 2));
+
+        let commit_id = pullRequest.head?.sha;
+        if (!commit_id) {
+            const { data: prData } = await octokit.rest.pulls.get({
+                owner,
+                repo,
+                pull_number: prNumber
+            });
+            commit_id = prData.head.sha;
+        }
+
+        await postComments(octokit, owner, repo, prNumber, commit_id, lintFindings);
     } catch (error) {
         console.error("Error fetching PR files:", error.message);
         process.exit(1);
