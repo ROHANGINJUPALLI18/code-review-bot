@@ -1,0 +1,13 @@
+{
+  "pull_request": {
+    "number": 1,
+    "base": {
+      "repo": {
+        "name": "code-review-bot",
+        "owner": {
+          "login": "ROHANGINJUPALLI18"
+        }
+      }
+    }
+  }
+}
