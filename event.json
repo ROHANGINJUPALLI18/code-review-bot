@@ -1,6 +1,6 @@
 {
   "pull_request": {
-    "number": 1,
+    "number": 3,
     "base": {
       "repo": {
         "name": "code-review-bot",
