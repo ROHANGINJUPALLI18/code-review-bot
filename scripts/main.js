@@ -1,5 +1,6 @@
-const { Octokit } = require("@octokit/rest");
-const fs = require('fs');
+import {Octokit} from "@octokit/rest";
+import { log } from "console";
+import fs from "fs";
 
 async function main() {
     const token = process.env.GITHUB_TOKEN;
@@ -37,9 +38,13 @@ async function main() {
             pull_number: prNumber
         });
 
+        console.log(files);
+        
+
         console.log(`Found ${files.length} changed files:`);
         files.forEach(file => {
             console.log(`- ${file.filename} (+${file.additions} / -${file.deletions})`);
+            console.log(`content of file ${file.filename} : ${file.data}`)
         });
     } catch (error) {
         console.error("Error fetching PR files:", error.message);
