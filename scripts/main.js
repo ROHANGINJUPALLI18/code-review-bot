@@ -61,7 +61,7 @@ async function main() {
         if (config.checks.eslint) {
             lintFindings = await lintFiles(filePaths);
             
-            // Filter by severity threshold
+            
             if (config.eslint.severity_threshold === "error") {
                 lintFindings = lintFindings.filter(f => f.severity === "error");
             }
