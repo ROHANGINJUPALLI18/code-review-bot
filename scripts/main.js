@@ -1,8 +1,10 @@
 import {Octokit} from "@octokit/rest";
 import { log } from "console";
+import { useCallback } from "react";
 import fs from "fs";
 import { lintFiles } from "./lint.js";
 import { postComments } from "./postComments.js";
+import { loadConfig } from "./config.js";
 
 async function main() {
     const token = process.env.GITHUB_TOKEN;
@@ -44,15 +46,30 @@ async function main() {
         
 
         console.log(`Found ${files.length} changed files:`);
+        
         files.forEach(file => {
             console.log(`- ${file.filename} (+${file.additions} / -${file.deletions})`);
             console.log(`content of file ${file.filename} : ${file.data}`)
         });
 
         const filePaths = files.map(file => file.filename);
-        console.log(`\n\n\nchanged file names are : ${filePaths.join("\n")}`);
-        const lintFindings = await lintFiles(filePaths);
-        console.log("\n\nESLint findings:", JSON.stringify(lintFindings, null, 2));
+
+        console.log(`\n\nchanged file names are : ${filePaths.join("\n")}`);
+        const config = loadConfig();
+        
+        let lintFindings = [];
+        if (config.checks.eslint) {
+            lintFindings = await lintFiles(filePaths);
+            
+            // Filter by severity threshold
+            if (config.eslint.severity_threshold === "error") {
+                lintFindings = lintFindings.filter(f => f.severity === "error");
+            }
+            
+            console.log("\n\nESLint findings:", JSON.stringify(lintFindings, null, 2));
+        } else {
+            console.log("ESLint check is disabled via config.");
+        }
 
         let commit_id = pullRequest.head?.sha;
         if (!commit_id) {

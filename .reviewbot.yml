@@ -1,0 +1,5 @@
+checks:
+  eslint: true
+  llm_suggestions: false
+eslint:
+  severity_threshold: warning
